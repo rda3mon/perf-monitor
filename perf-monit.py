@@ -66,16 +66,20 @@ def monit(pid, output, interval, dirpath, draw):
         if output == "csv":
             writeToFile(None, fp, True);
 
-        fig, axs = plt.subplots(figsize=(24,16), nrows=2, ncols=2)
+        fig, axs = plt.subplots(figsize=(24,16), nrows=3, ncols=2)
 
         axs[0, 0].plot(plot_out["now"], list(map(float, plot_out["cpu"])), 'tab:orange')
         axs[0, 0].set_title('CPU')
-        axs[0, 1].plot(plot_out["now"], list(map(float, plot_out["lsof"])), 'tab:green')
+        axs[0, 1].plot(plot_out["now"], list(map(float, plot_out["lsof"])), 'tab:red')
         axs[0, 1].set_title('Open Files')
-        axs[1, 0].plot(plot_out["now"], list(map(float, plot_out["mem"])), 'tab:red')
+        axs[1, 0].plot(plot_out["now"], list(map(float, plot_out["mem"])), 'tab:orange')
         axs[1, 0].set_title('Memory')
-        axs[1, 1].plot(plot_out["now"], list(map(float, plot_out["threads"])), 'tab:blue')
+        axs[1, 1].plot(plot_out["now"], list(map(float, plot_out["threads"])), 'tab:red')
         axs[1, 1].set_title('Threads')
+        axs[2, 0].plot(plot_out["now"], [item[0] for item in map(lambda x: x.split(), plot_out["load"])], 'tab:orange')
+        axs[2, 0].set_title('Load 1 Minute avg')
+        axs[2, 1].plot(plot_out["now"], [item[1] for item in map(lambda x: x.split(), plot_out["load"])], 'tab:red')
+        axs[2, 1].set_title('Load 5 Minute avg')
 
         for ax in axs.flat:
             ax.set(xlabel='Time')
