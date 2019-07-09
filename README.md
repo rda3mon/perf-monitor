@@ -37,3 +37,6 @@ optional arguments:
 
 Sample Plot:
 
+![Sample Plot](https://raw.githubusercontent.com/rda3mon/perfmon/master/resources/images/sample_readme_image.png)
+
+
