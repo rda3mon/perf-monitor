@@ -5,7 +5,7 @@ import time
 import subprocess
 import os
 import matplotlib.pyplot as plt
-from matplotlib.ticker import MaxNLocator
+import numpy as np
 
 fetch_cpu = "ps -p {} -o %cpu --no-headers"
 fetch_mem = "ps -p {} -o %mem --no-headers"
@@ -34,10 +34,9 @@ def writeToFile(content, fp, close=False):
         fp.close()
 
 def draw_subplot(plot, color, x, y, xlabel, ylabel):
-    x = list(map(float, x))
-    y = list(map(float, y))
+    x = np.array(list(map(float, x)))
+    y = np.array(list(map(float, y)))
     plot.plot(x, y, color)
-    #plot.set_title(ylabel)
     #plot.set_yticks(np.arange(min(y), max(y), 1));
     plot.set(xlabel=xlabel, ylabel=ylabel)
 
@@ -63,7 +62,7 @@ def monit(pid, output, interval, dirpath, draw):
 
             if output == "csv":
                 writeToFile("{},{},{},{},{},{}\n".format(plot_out["now"][-1], plot_out["cpu"][-1], plot_out["mem"][-1], plot_out["threads"][-1], plot_out["lsof"][-1], plot_out["load"][-1]), fp);
-            else:
+            elif output == "raw":
                 print("Time: {}\nCPU: {}\nMemory: {}\nThreads: {}\nOpen Files: {}\nLoad Factor: {}\n\n".format(plot_out["now"][-1], plot_out["cpu"][-1], plot_out["mem"][-1], plot_out["threads"][-1], plot_out["lsof"][-1], plot_out["load"][-1]));
             now += interval;
             time.sleep(interval);
@@ -91,13 +90,16 @@ def monit(pid, output, interval, dirpath, draw):
 
         plt.savefig("{}/{}.svg".format(dirpath, pid), format='svg', dpi=1200, bbox_inches='tight')
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(add_help=False,description='Performance Monitoring tools');
+def main():
+    parser = argparse.ArgumentParser(add_help=True, description='Performance Monitoring tools');
     parser.add_argument("-p", "--pid", help="Process id for analysing the performance", required=True);
-    parser.add_argument("-o", "--output", choices=['csv', 'raw'], help="Output format", default="raw");
-    parser.add_argument("-i", "--interval", choices=[3, 5, 10, 20, 60], type=int, help="Monitor interval", default=3);
-    parser.add_argument("-s", "--dirpath", default=default_dir, help="Directory path where files to be stored");
-    parser.add_argument("-d", "--draw", action='store_true', help="Store the output as figures");
+    parser.add_argument("-o", "--output", choices=['csv', 'raw', 'quiet'], help="Output format. (Default - quiet)", default="quiet");
+    parser.add_argument("-i", "--interval", choices=[3, 5, 10, 20, 60], type=int, help="Monitor interval in seconds (Default - 3s)", default=3);
+    parser.add_argument("-s", "--dirpath", default=default_dir, help="Directory path where files to be stored (Default {})".format(default_dir));
+    parser.add_argument("-d", "--draw", action='store_true', help="Store the output as figures (Default -- True)");
     args = parser.parse_args();
 
     monit(args.pid, args.output, args.interval, args.dirpath, args.draw);
+
+
+__all__ = ['main']
