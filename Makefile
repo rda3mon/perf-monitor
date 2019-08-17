@@ -2,7 +2,7 @@ BUILDDIR ?= ./dist
 EXECUTABLE ?= perfmon
 PREFIX ?= /usr/local
 BINDIR ?= $(PREFIX)/bin
-PYTHON ?= /usr/bin/env python
+PYTHON ?= /usr/bin/env python3
 
 all: perfmon
 

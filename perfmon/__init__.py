@@ -6,6 +6,7 @@ import subprocess
 import os
 import matplotlib.pyplot as plt
 import numpy as np
+import traceback
 
 fetch_cpu = "ps -p {} -o %cpu --no-headers"
 fetch_mem = "ps -p {} -o %mem --no-headers"
@@ -23,8 +24,9 @@ def run_command(command):
             output = str((result.stdout).decode('UTF-8')).strip()
         else:
             output = 0
-    except Exception as e:
-        print("An exception occurred while executing command. Message: " + e.message);
+    except Exception as ex:
+        print("An exception occurred while executing command. Message: " + ex.message);
+        traceback.print_exc()
     return output
 
 def writeToFile(content, fp, close=False):

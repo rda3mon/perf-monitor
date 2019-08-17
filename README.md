@@ -2,6 +2,8 @@
 
 A basic, simple to use, birds eye view of linux process performance monitoring
 
+> Note: Works only with python >= 3.5
+
 # Installation 
 
 ### git clone 
